@@ -13,6 +13,7 @@ trait webapp
 
   protected function init_menu($menudefinitionfile, $menutemplatefile, $index = 0)
   {
+    #\booosta\Framework::debug("in init_menu");
     if(is_readable($menudefinitionfile) && is_readable($menutemplatefile))
       $this->menu[$index] = $this->makeInstance('Menu', $menudefinitionfile, $menutemplatefile);
   }
@@ -25,32 +26,33 @@ trait webapp
 
   protected function autorun_menu()
   {
+    #\booosta\Framework::debug("in autorun_menu");
     $template_module = $this->config('template_module');
 
-    if($this->user_class == 'adminuser') $postfix = 'admin'; else $postfix = $this->user_class;
+    if($this->user_class == 'adminuser') $postfix = '_admin'; else $postfix = '_' . $this->user_class;
 
-    if($df = $this->config("menutemplatefile_$postfix")) $tplfile = $df;
-    elseif(($df = $this->{"menutemplatefile_$postfix"}) && is_readable($df)) $tplfile = $df;
+    if($df = $this->config("menutemplatefile$postfix")) $tplfile = $df;
+    elseif(($df = $this->{"menutemplatefile$postfix"}) && is_readable($df)) $tplfile = $df;
     elseif(($df = $this->config('menutemplatefile')) && is_readable($df)) $tplfile = $df;
-    elseif(is_readable("tpl/menutemplatefile_$postfix.php")) $tplfile = "tpl/menutemplatefile_$postfix.php";
+    elseif(is_readable("tpl/menutemplatefile$postfix.php")) $tplfile = "tpl/menutemplatefile$postfix.php";
     elseif(is_readable('tpl/menutemplatefile.php')) $tplfile = 'tpl/menutemplatefile.php';
-    elseif($template_module && is_readable("vendor/booosta/$template_module/menutemplatefile_$postfix.php")) 
-      $tplfile = "vendor/booosta/$template_module/menutemplatefile_$postfix.php";
+    elseif($template_module && is_readable("vendor/booosta/$template_module/menutemplatefile$postfix.php")) 
+      $tplfile = "vendor/booosta/$template_module/menutemplatefile$postfix.php";
     elseif($template_module && is_readable("vendor/booosta/$template_module/menutemplatefile.php")) 
       $tplfile = "vendor/booosta/$template_module/menutemplatefile.php";
-    elseif(is_readable("vendor/booosta/menu/menutemplatefile_$postfix.php")) $tplfile = "vendor/booosta/menu/menutemplatefile_$postfix.php";
+    elseif(is_readable("vendor/booosta/menu/menutemplatefile$postfix.php")) $tplfile = "vendor/booosta/menu/menutemplatefile$postfix.php";
     elseif(is_readable('vendor/booosta/menu/menutemplatefile.php')) $tplfile = 'vendor/booosta/menu/menutemplatefile.php';
-    #else \booosta\debug("ERROR: no menudetemplatefile");
+    #else \booosta\Framework::debug("ERROR: no menudetemplatefile");
     #\booosta\debug("tplfile: $tplfile");
 
-    if($df = $this->config("menudefinitionfile_$postfix")) $this->init_menu($df, $tplfile);
-    elseif($df = $this->{"menudefinitionfile_$postfix"}) $this->init_menu($df, $tplfile);
+    if($df = $this->config("menudefinitionfile$postfix")) $this->init_menu($df, $tplfile);
+    elseif($df = $this->{"menudefinitionfile$postfix"}) $this->init_menu($df, $tplfile);
     elseif($df = $this->config('menudefinitionfile')) $this->init_menu($df, $tplfile);
-    elseif(is_readable("incl/menudefinitionfile_$postfix.php")) $this->init_menu("incl/menudefinitionfile_$postfix.php", $tplfile);
+    elseif(is_readable("incl/menudefinitionfile$postfix.php")) $this->init_menu("incl/menudefinitionfile$postfix.php", $tplfile);
     elseif(is_readable('incl/menudefinitionfile.php')) $this->init_menu('incl/menudefinitionfile.php', $tplfile);
-    elseif(is_readable("vendor/booosta/menu/menudefinitionfile_$postfix.php")) $this->init_menu("vendor/booosta/menu/menudefinitionfile_$postfix.php", $tplfile);
+    elseif(is_readable("vendor/booosta/menu/menudefinitionfile$postfix.php")) $this->init_menu("vendor/booosta/menu/menudefinitionfile$postfix.php", $tplfile);
     elseif(is_readable('vendor/booosta/menu/menudefinitionfile.php')) $this->init_menu('vendor/booosta/menu/menudefinitionfile.php', $tplfile);
-    #else \booosta\debug("ERROR: no menudefinitionfile");
+    #else \booosta\Framework::debug("ERROR: no menudefinitionfile");
   }
 
   protected function webappinit_menu()

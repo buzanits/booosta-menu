@@ -1,6 +1,7 @@
 <?php
 namespace booosta\menu;
-\booosta\Framework::init_module('menu');
+use \booosta\Framework as b;
+b::init_module('menu');
 
 class Menu extends \booosta\base\Module
 {
@@ -10,7 +11,7 @@ class Menu extends \booosta\base\Module
 
   public function __construct($menudefinition_file = null, $menutemplate_file = null)
   {
-    #print "$menudefinition_file, $menutemplate_file\n";
+    #\booosta\Framework::debug("$menudefinition_file, $menutemplate_file");
     parent::__construct();
 
     if(is_readable($menudefinition_file)) include $menudefinition_file;
@@ -76,8 +77,11 @@ class Menu extends \booosta\base\Module
     if(isset($this->menu_tpl['menu_prefix'])) $menu_prefix = $this->menu_tpl['menu_prefix'];
     if(isset($this->menu_tpl['menu_postfix'])) $menu_postfix = $this->menu_tpl['menu_postfix'];
 
-    if($this->menuicons[$this->menu->caption] == "" ) $this->menuicons[$this->menu->caption] = $this->config('menu_default_icon');
+    if($this->menuicons[$this->menu->caption] == "" ) 
+      $this->menuicons[$this->menu->caption] = b::$module_config[$this->config('template_module')]['menu_default_icon'] ?? 
+                                               $this->config('menu_default_icon');
     if($this->menuicons[$this->menu->caption] == "no-icon") $this->menuicons[$this->menu->caption] = '';
+    #b::debug($this->menuicons[$this->menu->caption]);
 
     $html = $menu_prefix;
     foreach($this->menu->submenus as $submenu) $html .= $this->get_submenu_html($submenu);
@@ -112,7 +116,9 @@ class Menu extends \booosta\base\Module
     if(isset($this->menu_tpl['menucaption'])) $menucaption = $this->menu_tpl['menucaption'];
  
     #\booosta\debug("caption: " . $submenu->caption);
-    if($this->menuicons[$submenu->caption] == "" ) $this->menuicons[$submenu->caption] = $this->config('menu_default_icon');
+    if($this->menuicons[$submenu->caption] == "" ) 
+      $this->menuicons[$submenu->caption] = b::$module_config[$this->config('template_module')]['menu_default_icon'] ?? 
+                                            $this->config('menu_default_icon');
     if($this->menuicons[$submenu->caption] == "no-icon") $this->menuicons[$submenu->caption] = '';
 
     if(sizeof($submenu->submenus) == 0):
