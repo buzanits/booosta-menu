@@ -13,7 +13,7 @@ trait webapp
 
   protected function init_menu($menudefinitionfile, $menutemplatefile, $index = 0)
   {
-    #\booosta\Framework::debug("in init_menu");
+    #\booosta\Framework::debug("in init_menu: $menudefinitionfile, $menutemplatefile");
     if(is_readable($menudefinitionfile) && is_readable($menutemplatefile))
       $this->menu[$index] = $this->makeInstance('Menu', $menudefinitionfile, $menutemplatefile);
   }
@@ -36,13 +36,14 @@ trait webapp
     elseif(($df = $this->config('menutemplatefile')) && is_readable($df)) $tplfile = $df;
     elseif(is_readable("tpl/menutemplatefile$postfix.php")) $tplfile = "tpl/menutemplatefile$postfix.php";
     elseif(is_readable('tpl/menutemplatefile.php')) $tplfile = 'tpl/menutemplatefile.php';
-    elseif($template_module && is_readable("vendor/booosta/$template_module/menutemplatefile$postfix.php")) 
-      $tplfile = "vendor/booosta/$template_module/menutemplatefile$postfix.php";
-    elseif($template_module && is_readable("vendor/booosta/$template_module/menutemplatefile.php")) 
-      $tplfile = "vendor/booosta/$template_module/menutemplatefile.php";
+    elseif($template_module && is_readable("vendor/booosta/$template_module/src/menutemplatefile$postfix.php")) 
+      $tplfile = "vendor/booosta/$template_module/src/menutemplatefile$postfix.php";
+    elseif($template_module && is_readable("vendor/booosta/$template_module/src/menutemplatefile.php")) 
+      $tplfile = "vendor/booosta/$template_module/src/menutemplatefile.php";
     elseif(is_readable("vendor/booosta/menu/menutemplatefile$postfix.php")) $tplfile = "vendor/booosta/menu/menutemplatefile$postfix.php";
-    elseif(is_readable('vendor/booosta/menu/menutemplatefile.php')) $tplfile = 'vendor/booosta/menu/menutemplatefile.php';
-    #else \booosta\Framework::debug("ERROR: no menudetemplatefile");
+    elseif(is_readable("vendor/booosta/menu/menutemplatefile.php")) $tplfile = "vendor/booosta/menu/menutemplatefile.php";
+    #else \booosta\Framework::debug("ERROR: no menudetemplatefile: ($this->base_dir) $postfix - " . getcwd());
+    #\booosta\Framework::debug("{$this->base_dir}vendor/booosta/$template_module/src/menutemplatefile$postfix.php");
     #\booosta\debug("tplfile: $tplfile");
 
     if($df = $this->config("menudefinitionfile$postfix")) $this->init_menu($df, $tplfile);
